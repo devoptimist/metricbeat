@@ -1,0 +1,23 @@
+[template]
+number_of_shards = 1
+codec = "best_compression"
+
+[module_config]
+path = "${path.config}/modules.d/*.yml"
+processes = "['.*']"
+max_start_delay = "10s"
+
+[module_config.reload]
+enabled = true
+period = "30s"
+
+#[kibana]
+#enabled = true
+#host = "https://127.0.0.1:5601"
+
+[elasticsearch]
+enabled = true
+
+[[elasticsearch.members]]
+host = "localhost"
+port = 9200

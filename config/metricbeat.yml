@@ -1,0 +1,48 @@
+{{~#if cfg.template}}
+setup.template.settings:
+  {{~#if cfg.template.number_of_shards}}
+  index.number_of_shards: {{cfg.template.number_of_shards}}
+  {{~/if}}
+  {{~#if cfg.template.codec}}
+  index.codec: {{cfg.template.codec}}
+  {{~/if}}
+{{~/if}}
+
+{{#if cfg.module_config ~}}
+metricbeat.config.modules:
+  {{#if cfg.module_config.path ~}}
+  path: {{cfg.module_config.path}}
+  {{/if ~}}
+  {{#if cfg.module_config.processes ~}}
+  processes: {{cfg.module_config.processes}}
+  {{/if ~}}
+  {{#if cfg.module_config.reload.enabled ~}}
+  reload.enabled: {{cfg.module_config.reload.enabled}}
+  {{/if ~}}
+  {{#if cfg.module_config.reload.period ~}}
+  reload.period: {{cfg.module_config.reload.period}}
+  {{/if ~}}
+  {{#if cfg.module_config.max_start_delay ~}}
+  path: {{cfg.module_config.max_start_delay}}
+  {{/if ~}}
+{{/if ~}}
+
+{{~#if bind.kibana }}
+setup.kibana:
+  host: "{{bind.kibana.first.sys.ip}}:{{bind.kibana.first.cfg.port}}"
+{{else }}
+  {{~#if cfg.kibana.enabled}}
+setup.kibana:
+  host: "{{cfg.kibana.host}}"
+  {{/if~}}
+{{/if}}
+
+{{~#if bind.elasticsearch}}
+output.elasticsearch:
+  hosts: [{{#each bind.elasticsearch.members ~}} "{{sys.ip}}"{{~#unless @last}},{{/unless}} {{/each ~}}]
+{{else}}
+  {{~#if cfg.elasticsearch.enabled}}
+output.elasticsearch:
+  hosts: [{{~#each cfg.elasticsearch.members as |member|}} "{{member.host}}:{{member.port}}"{{~#unless @last}},{{/unless}} {{~/each}}]
+  {{~/if}}
+{{~/if}}
